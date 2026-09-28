@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JWT Demo - Profile</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<main class="container">
+    <section class="card">
+        <div class="topbar"><span class="eyebrow">PROTECTED RESOURCE</span><button id="logout" class="link-button">Đăng xuất</button></div>
+        <h1>Thông tin người dùng</h1>
+        <p class="muted">Dữ liệu từ <code>/users/me</code> và <code>/users</code>, gửi kèm JWT qua header Authorization Bearer.</p>
+        <img id="avatar" alt="Ảnh đại diện" width="100" hidden>
+        <h2 id="full-name"></h2>
+        <p id="email"></p>
+        <pre id="profile">Đang tải...</pre>
+        <h2>Danh sách người dùng</h2>
+        <pre id="users">Đang tải...</pre>
+        <p id="message" class="message"></p>
+        <a href="/index.html">← Trang chủ</a>
+    </section>
+</main>
+<script src="/js/app.js"></script>
+<script>
+async function loadProfile() {
+    if (!token()) {
+        window.location.href = '/login';
+        return;
+    }
+    const profileResponse = await api('/users/me');
+    if (profileResponse.status === 401) {
+        localStorage.removeItem('jwt');
+        window.location.href = '/login';
+        return;
+    }
+    if (!profileResponse.ok) throw new Error('Không tải được thông tin người dùng');
+    const profile = await profileResponse.json();
+    document.querySelector('#full-name').textContent = profile.fullName;
+    document.querySelector('#email').textContent = profile.email;
+    document.querySelector('#profile').textContent = JSON.stringify(profile, null, 2);
+    if (profile.images) {
+        const avatar = document.querySelector('#avatar');
+        avatar.src = profile.images;
+        avatar.hidden = false;
+    }
+    const usersResponse = await api('/users');
+    if (!usersResponse.ok) throw new Error('Không tải được danh sách người dùng');
+    document.querySelector('#users').textContent = JSON.stringify(await usersResponse.json(), null, 2);
+}
+document.querySelector('#logout').addEventListener('click', () => {
+    localStorage.removeItem('jwt');
+    window.location.href = '/login';
+});
+loadProfile().catch(error => {
+    document.querySelector('#message').classList.add('error');
+    document.querySelector('#message').textContent = error.message;
+});
+</script>
+</body>
+</html>

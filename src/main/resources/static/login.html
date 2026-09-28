@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JWT Demo - Đăng nhập</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<main class="container narrow">
+    <section class="card">
+        <span class="eyebrow">AUTHENTICATION</span>
+        <h1>Đăng nhập</h1>
+        <p class="muted">Đăng nhập bằng tài khoản đã tạo trong MySQL.</p>
+        <form id="login-form">
+            <label>Email<input name="email" type="email" autocomplete="username" required></label>
+            <label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required></label>
+            <button class="button" type="submit">Nhận JWT token</button>
+        </form>
+        <p id="message" class="message"></p>
+        <p>Chưa có tài khoản? <a href="/signup.html">Đăng ký</a></p>
+        <a href="/index.html">← Trang chủ</a>
+    </section>
+</main>
+<script src="/js/app.js"></script>
+<script>
+document.querySelector('#login-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const message = document.querySelector('#message');
+    try {
+        const response = await api('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email: form.get('email'), password: form.get('password') })
+        });
+        if (!response.ok) throw new Error((await response.json()).message || 'Đăng nhập thất bại');
+        const data = await response.json();
+        localStorage.setItem('jwt', data.token);
+        message.textContent = 'Đăng nhập thành công. Đang chuyển đến trang cá nhân...';
+        window.setTimeout(() => window.location.href = '/user/profile', 400);
+    } catch (error) {
+        message.classList.add('error');
+        message.textContent = error.message;
+    }
+});
+</script>
+</body>
+</html>

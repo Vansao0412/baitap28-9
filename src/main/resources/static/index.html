@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JWT + JJWT</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="demo-page">
+<main class="container demo-shell">
+    <h1>JWT + JJWT</h1>
+    <p class="demo-subtitle">Spring Boot 3 · Security 6 · JWT HS256</p>
+
+    <section class="card demo-card">
+        <h2>Tạo tài khoản</h2>
+        <form id="demo-form" novalidate>
+            <div class="demo-fields">
+                <input id="demo-full-name" name="fullName" aria-label="Họ tên" autocomplete="name" maxlength="50" placeholder="Họ tên">
+                <input id="demo-email" name="email" type="email" aria-label="Email" autocomplete="username" placeholder="Email" required>
+                <input id="demo-password" name="password" type="password" aria-label="Mật khẩu" autocomplete="current-password" placeholder="Mật khẩu" required>
+                <button id="demo-signup" type="button">Đăng ký</button>
+                <button id="demo-login" type="button">Đăng nhập</button>
+            </div>
+            <div class="demo-actions">
+                <button id="demo-me" type="button">GET /users/me</button>
+                <button id="demo-users" type="button">GET /users</button>
+                <button id="demo-logout" type="button">Đăng xuất</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card demo-card demo-result">
+        <h2>Kết quả</h2>
+        <pre id="demo-output" aria-live="polite">Nhấn một nút để xem kết quả API.</pre>
+    </section>
+</main>
+<script src="/js/app.js"></script>
+<script src="/js/demo.js"></script>
+</body>
+</html>
